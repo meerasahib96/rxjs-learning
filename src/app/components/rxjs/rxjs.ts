@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'rxjs-basic',
@@ -8,8 +8,17 @@ import { Observable } from 'rxjs';
   styleUrl: './rxjs.scss'
 })
 export class RxjsBasic {
+  cityList$ = of('Delhi', 'Mumbai', 'Bangalore', 'Chennai');
   constructor(){
-   const myObservable$ = new Observable(val => val.next('Hello World!'));
-    myObservable$.subscribe(val => console.log(val));
+   const myObservable$ = new Observable(val => {
+     val.next('Hello');
+     val.next('World!');
+     val.complete();
+   });
+    myObservable$.subscribe({
+      next: (val) => console.log(val),
+      complete: () => console.log('Completed')
+    });
+    this.cityList$.subscribe( val => console.log(val));
   }
 }
