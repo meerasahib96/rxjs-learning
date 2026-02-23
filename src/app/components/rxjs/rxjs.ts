@@ -11,8 +11,10 @@ export class RxjsBasic {
    userService = inject(UserService);
    
    constructor(){
+   
     this.userService.getUsers().subscribe(res => console.log(res));
       this.userService.getUserById(1).subscribe(res => console.log(res));
+      this.userService.allUsers$.subscribe(res => console.log('All Users from Subject:', res));
    }
   
 }
