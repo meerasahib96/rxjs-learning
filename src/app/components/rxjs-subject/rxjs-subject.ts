@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { UserService } from '../../services/user-service';
 
@@ -13,6 +14,7 @@ export class RxjsSubject implements OnInit {
   number$ =new Subject<number>();
 
   userService = inject(UserService);
+  router = inject(Router);
   constructor() {
     this.userService.name$.next('safiya')
 
@@ -23,20 +25,16 @@ export class RxjsSubject implements OnInit {
   }
 
   ngOnInit() {
-    this.name$.subscribe(name => {
-      console.log(name);
-    });
-    this.number$.subscribe(number => {
-      console.log(number);
-    });
-    this.name$.next('mohamed');
-    this.number$.next(7);
-
-    this.userService.name$.subscribe(name => {
-      console.log('UserService name:', name);
-    });
+  
     this.userService.name$.next('mohamed');
     this.userService.name$.next('katheeb');
+  }
+
+  onNameChange(event: any) {
+    const newName = event.target.value;
+    this.userService.nameSub$.next(newName);
+    this.userService.nameBehaviorSub$.next(newName);
+    this.router.navigate(['/rxjs-basic']);
   }
 
 }

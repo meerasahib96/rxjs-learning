@@ -1,6 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { filter } from 'rxjs';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { UserService } from '../../services/user-service';
 
 @Component({
@@ -9,16 +11,25 @@ import { UserService } from '../../services/user-service';
   templateUrl: './rxjs.html',
   styleUrl: './rxjs.scss'
 })
-export class RxjsBasic {
+export class RxjsBasic implements OnInit, OnDestroy {
    userService = inject(UserService);
+   router = inject(Router);
    searchText = new FormControl();
+   private destroy$ = new Subject<void>();  // For unsubscribing
    
-   constructor(){
-   
-    this.userService.getUsers().subscribe(res => console.log(res));
-      this.userService.getUserById(1).subscribe(res => console.log(res));
-      this.userService.allUsers$.subscribe(res => console.log('All Users from Subject:', res));
-      this.searchText.valueChanges.pipe(filter(value => value.length >= 4)).subscribe(value => console.log('Search Text:', value));
+   ngOnInit(){
+      this.userService.nameSub$.pipe(takeUntil(this.destroy$)).subscribe(name => console.log('Name from Subject:', name));
+      this.userService.nameBehaviorSub$.pipe(takeUntil(this.destroy$)).subscribe(name => console.log('Name from BehaviorSubject:', name));
    }
-  
+
+   ngOnDestroy() {
+      this.destroy$.next();
+      this.destroy$.complete();
+   }
+
+   onSearchChange(){
+    this.userService.nameSub$.next(this.searchText.value || '');
+    this.userService.nameBehaviorSub$.next(this.searchText.value || '');
+    this.router.navigate(['/rxjs-subject']);
+   }
 }

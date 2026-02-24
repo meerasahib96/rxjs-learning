@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map, tap } from 'rxjs';
+import { BehaviorSubject, map, Subject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,9 @@ export class UserService {
   allUsers$ = this.allUserSubject.asObservable();
 
   name$ = new BehaviorSubject<string>("katheeb sahib");
+
+  nameSub$ = new Subject<string>();
+  nameBehaviorSub$ = new BehaviorSubject<string>("");
 
   getUsers(){
     return this.http.get('https://jsonplaceholder.typicode.com/users').pipe(
