@@ -12,24 +12,36 @@ import { UserService } from '../../services/user-service';
   styleUrl: './rxjs.scss'
 })
 export class RxjsBasic implements OnInit, OnDestroy {
-   userService = inject(UserService);
-   router = inject(Router);
-   searchText = new FormControl();
-   private destroy$ = new Subject<void>();  // For unsubscribing
-   
-   ngOnInit(){
-      this.userService.nameSub$.pipe(takeUntil(this.destroy$)).subscribe(name => console.log('Name from Subject:', name));
-      this.userService.nameBehaviorSub$.pipe(takeUntil(this.destroy$)).subscribe(name => console.log('Name from BehaviorSubject:', name));
-   }
+  userService = inject(UserService);
+  router = inject(Router);
+  searchText = new FormControl();
+  private destroy$ = new Subject<void>();  // For unsubscribing
 
-   ngOnDestroy() {
-      this.destroy$.next();
-      this.destroy$.complete();
-   }
+  ngOnInit() {
+    this.userService.nameSub$.pipe(takeUntil(this.destroy$)).subscribe(name => console.log('Name from Subject:', name));
+    this.userService.nameBehaviorSub$.pipe(takeUntil(this.destroy$)).subscribe(name => console.log('Name from BehaviorSubject:', name));
+  }
 
-   onSearchChange(){
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onSearchChange() {
     this.userService.nameSub$.next(this.searchText.value || '');
     this.userService.nameBehaviorSub$.next(this.searchText.value || '');
     this.router.navigate(['/rxjs-subject']);
-   }
+  }
+  getUserById(id: number) {
+    this.userService.getUserById(id).pipe(takeUntil(this.destroy$)).subscribe({
+      next: (user: any) => {
+        console.log('User Detail:', user);
+        this.router.navigate(['/rxjs-subject']);
+      },
+      error: (err: any) => {
+        console.error('Error fetching user details:', err);
+      }
+    });
+
+  }
 }

@@ -1,1 +1,3 @@
-<input type="text" placeholder="Enter name" (change)="onNameChange($event)" />
+<!-- <input type="text" placeholder="Enter name" (change)="onNameChange($event)" /> -->
+
+<input type="number" placeholder="Enter id" (change)="getUserById(+$event.target.value)" />

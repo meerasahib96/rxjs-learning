@@ -1,1 +1,3 @@
-<input [formControl]="searchText" placeholder="Search Users"  (change)="onSearchChange()" />
+<!-- <input [formControl]="searchText" placeholder="Search Users"  (change)="onSearchChange()" /> -->
+
+<input type="text" placeholder="enter id" (change)="getUserById(+$event.target.value)" />
