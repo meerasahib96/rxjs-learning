@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { UserService } from '../../services/user-service';
 
 @Component({
   selector: 'app-rxjs-subject',
@@ -10,7 +11,10 @@ import { Subject } from 'rxjs';
 export class RxjsSubject implements OnInit {
   name$ = new Subject();
   number$ =new Subject<number>();
+
+  userService = inject(UserService);
   constructor() {
+    this.userService.name$.next('safiya')
 
     setTimeout(() => {
       this.name$.next('katheeb');
@@ -27,6 +31,12 @@ export class RxjsSubject implements OnInit {
     });
     this.name$.next('mohamed');
     this.number$.next(7);
+
+    this.userService.name$.subscribe(name => {
+      console.log('UserService name:', name);
+    });
+    this.userService.name$.next('mohamed');
+    this.userService.name$.next('katheeb');
   }
 
 }

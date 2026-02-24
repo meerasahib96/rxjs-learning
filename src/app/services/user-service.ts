@@ -10,6 +10,8 @@ export class UserService {
   private allUserSubject = new BehaviorSubject<any[]>([]);
   allUsers$ = this.allUserSubject.asObservable();
 
+  name$ = new BehaviorSubject<string>("katheeb sahib");
+
   getUsers(){
     return this.http.get('https://jsonplaceholder.typicode.com/users').pipe(
       tap((res: any) => this.allUserSubject.next(res)),  // Assign response to allUsers
