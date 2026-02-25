@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, switchMap } from 'rxjs';
+import { mergeMap } from 'rxjs';
 
 @Component({
   selector: 'app-combine-obs',
@@ -27,8 +27,11 @@ export class CombineObs {
     // });
 
     this.searchProduct.valueChanges.pipe(
-      debounceTime(300),
-      switchMap((searchTerm) => this.http.get('https://dummyjson.com/products/search?q=' + searchTerm))
+      mergeMap((searchTerm) => this.http.get('https://dummyjson.com/products/search?q=' + searchTerm))
     ).subscribe(res => console.log(res));
+
+
   }
+
+
 }
