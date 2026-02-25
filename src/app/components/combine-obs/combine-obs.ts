@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { mergeMap } from 'rxjs';
+import { concatMap, exhaustMap, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-combine-obs',
@@ -15,7 +15,7 @@ export class CombineObs {
   posts$ = this.http.get('https://jsonplaceholder.typicode.com/posts');
 
   searchProduct = new FormControl()
-
+  loginObs$ = new Subject<void>();
   constructor() {
     // forkJoin([this.users$, this.posts$]).subscribe({
     //   next: (res) => {
@@ -27,11 +27,16 @@ export class CombineObs {
     // });
 
     this.searchProduct.valueChanges.pipe(
-      mergeMap((searchTerm) => this.http.get('https://dummyjson.com/products/search?q=' + searchTerm))
+      concatMap((searchTerm) => this.http.get('https://dummyjson.com/products/search?q=' + searchTerm))
     ).subscribe(res => console.log(res));
 
-
+    this.loginObs$.pipe(
+      exhaustMap(() => this.http.get('https://jsonplaceholder.typicode.com/users'))
+    ).subscribe(res => console.log(res));
   }
 
+  login() {
+    this.loginObs$.next();
+  }
 
 }
