@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { interval, shareReplay, Subject, takeUntil } from 'rxjs';
 import { UserService } from '../../services/user-service';
 
 @Component({
@@ -23,6 +23,13 @@ export class RxjsSubject implements OnInit, OnDestroy {
     //   this.name$.next('katheeb');
     //   this.number$.next(100);
     // }, 2000);
+
+    const stream$ = interval(1000).pipe(shareReplay(1));
+    const sub = stream$.subscribe(value => console.log('Subscriber 1:', value));
+
+    setTimeout(() => {
+      sub.unsubscribe();
+    }, 3000);
   }
 
   ngOnInit() {

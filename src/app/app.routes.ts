@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { CombineObs } from './components/combine-obs/combine-obs';
 import { RxjsSubject } from './components/rxjs-subject/rxjs-subject';
 import { RxjsBasic } from './components/rxjs/rxjs';
 
@@ -8,7 +9,11 @@ export const routes: Routes = [
         component: RxjsBasic
     },
     {
-        path:'rxjs-subject',
+        path: 'rxjs-subject',
         component: RxjsSubject
+    },
+    {
+        path: 'combine-obs',
+        component: CombineObs
     }
 ];
