@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-form-component',
@@ -9,6 +10,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
   styleUrl: './form-component.scss'
 })
 export class FormComponent implements OnInit {
+  passwordMisMatch: boolean = false;
   private fb = inject(FormBuilder);
   myForm = this.fb.group({
     name: [''],
@@ -18,14 +20,25 @@ export class FormComponent implements OnInit {
     subscribe: [false]
   });
 
+  passwordVal$ = this.myForm.controls['password'].valueChanges;
+  confirmPasswordVal$ = this.myForm.controls['confirmPassword'].valueChanges;
+
   ngOnInit() {
     this.myForm.controls['confirmPassword'].disable();
-    this.myForm.controls['password'].valueChanges.subscribe(value => {
+    this.passwordVal$.subscribe(value => {
       if (value !== '') {
         this.myForm.controls['confirmPassword'].setValidators([Validators.required]);
         this.myForm.controls['confirmPassword'].enable();
       }
     })
+
+    combineLatest([this.passwordVal$, this.confirmPasswordVal$]).subscribe(([password, confirmPassword]) => {
+      if (password && confirmPassword) {
+        this.passwordMisMatch = password !== confirmPassword;
+      } else {
+        this.passwordMisMatch = false;
+      }
+    });
   }
 
   submitForm() {
