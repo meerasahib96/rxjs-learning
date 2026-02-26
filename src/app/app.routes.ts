@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { CombineObs } from './components/combine-obs/combine-obs';
+import { FormComponent } from './components/form-component/form-component';
 import { RxjsSubject } from './components/rxjs-subject/rxjs-subject';
 import { RxjsBasic } from './components/rxjs/rxjs';
 
@@ -15,5 +16,9 @@ export const routes: Routes = [
     {
         path: 'combine-obs',
         component: CombineObs
+    },
+    {
+        path: '',
+        component: FormComponent
     }
 ];
